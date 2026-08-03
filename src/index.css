@@ -1,0 +1,1782 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Design tokens (measured from reference — design.md §4) */
+    --cream: #FFF0DC;
+    --cream-pattern: #F5E9CB;
+    --cream-pattern-light: #FDF6E4;
+    --yellow: #FCC419;
+    --yellow-pill: #FEC51B;
+    --yellow-arch: #F8C018;
+    --yellow-card: #FFC61A;
+    --ink: #1D0100;
+    --green: #326A3A;
+    --green-light: #7FB069;
+
+    --background: 34 100% 93%;
+    --foreground: 15 100% 6%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 15 100% 6%;
+    --primary-foreground: 34 100% 93%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.625rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 240 4.8% 95.9%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91.2%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  html {
+    overflow-x: clip;
+  }
+
+  body {
+    background-color: var(--cream);
+    color: var(--ink);
+    font-family: Inter, Helvetica, Arial, sans-serif;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--yellow);
+    color: var(--ink);
+  }
+}
+
+@layer components {
+  /* ============================= shared ============================= */
+
+  .display-type {
+    font-family: 'Bowlby One SC', Impact, sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    line-height: 0.9;
+    color: var(--ink);
+  }
+
+  /* Pill button (Menu / Order) — design.md §7. Measured @1920 reference:
+     pill 139–144×53px (7.24–7.5 × 2.76vw); ink badge 38×38px (1.98vw,
+     radius 0.68vw) sitting 8px (0.39vw) from the pill edge; label in a
+     geometric sans (Poppins 500), mixed case, cap 14px → font ≈ 1.0vw;
+     gap badge↔text 23px (1.2vw); text-side padding 22–23px (1.2vw). */
+  .pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2vw;
+    background: var(--yellow-pill);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 0.39vw 1.2vw;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 1vw;
+    letter-spacing: 0;
+    line-height: 1;
+    box-shadow: 0 6px 18px rgba(29, 1, 0, 0.12);
+    transition: transform 0.25s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.25s ease;
+    cursor: pointer;
+    border: none;
+    /* rendered as a react-router <Link> */
+    text-decoration: none;
+  }
+  .pill-btn.menu {
+    padding-left: 0.39vw;
+  }
+  .pill-btn.order {
+    padding-right: 0.39vw;
+  }
+  .pill-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 28px rgba(29, 1, 0, 0.2);
+  }
+  .pill-btn:active {
+    transform: scale(0.97);
+  }
+  .pill-badge {
+    width: 1.98vw;
+    height: 1.98vw;
+    border-radius: 0.68vw;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .pill-badge svg {
+    width: 0.83vw;
+    height: 0.83vw;
+    color: var(--cream);
+    flex: none;
+  }
+
+  /* Logo squircle — measured @1920: 61×61px (3.18vw), radius ≈ 0.78vw */
+  .logo-squircle {
+    width: 3.18vw;
+    height: 3.18vw;
+    border-radius: 0.78vw;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .logo-squircle svg {
+    width: 62%;
+    height: 62%;
+  }
+
+  /* Nav row (top + bottom instances) — reference: pill tops at y46 (2.4vw),
+     side edges at x80 / 1920-81 (4.17vw) */
+  .nav-row {
+    position: absolute;
+    top: 2.4vw;
+    left: 4.17vw;
+    right: 4.17vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+  }
+  .nav-row .logo-squircle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* ============================= yellow pillar ============================= */
+
+  /* One continuous yellow pill behind hero → ribbons → recipe (the reference
+     has a single pill: arch top, rounded bottom below the smiley, ribbons
+     crossing OVER it). Measured @1920: arch top ≈ y323 (16.8vw), pill bottom
+     ≈ y4070 (212vw), width 49vw centered, radius = half width. */
+  .pillar-zone {
+    position: relative;
+  }
+  .yellow-pillar {
+    position: absolute;
+    top: 15.6vw;
+    bottom: 0;
+    left: calc(50% - 24.5vw);
+    width: 49vw;
+    background: var(--yellow-arch);
+    border-radius: 24.5vw;
+    z-index: 0;
+  }
+
+  /* ============================= hero ============================= */
+
+  .hero-stage {
+    position: relative;
+    height: 51.82vw;
+    z-index: 1;
+  }
+  .hero-headline {
+    position: absolute;
+    top: 11vw;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 10vw;
+    z-index: 2;
+    white-space: nowrap;
+  }
+  /* burger overlaps the headline's lower ~20-25% and its bottom bun reaches
+     the ribbon band below (measured from reference @1920) */
+  .hero-burger {
+    position: absolute;
+    top: 12.4vw;
+    left: calc(50% - 22.6vw);
+    width: 44.8vw;
+    z-index: 20;
+    pointer-events: none;
+  }
+  .hero-burger img,
+  .footer-burger img {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 30px 40px rgba(29, 1, 0, 0.18));
+  }
+  .hero-selectors {
+    position: absolute;
+    left: 3.9vw;
+    top: 26.46vw;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: 1.04vw;
+  }
+  .selector-circle {
+    width: 5.73vw;
+    height: 5.73vw;
+    border-radius: 999px;
+    background: var(--yellow-pill);
+    box-shadow: 0 6px 18px rgba(29, 1, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  }
+  .selector-circle:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 28px rgba(29, 1, 0, 0.2);
+  }
+  .selector-circle.active {
+    transform: scale(1.1);
+    box-shadow:
+      0 0 0 0.26vw var(--cream),
+      0 0 0 0.47vw var(--ink),
+      0 10px 24px rgba(29, 1, 0, 0.22);
+  }
+  .selector-circle img {
+    width: 72%;
+    height: 72%;
+    object-fit: contain;
+  }
+  /* ~310px stamp overlapping the right end of the headline ("BITE") */
+  .hero-badge {
+    position: absolute;
+    top: 17.1vw;
+    left: 79vw;
+    width: 16.1vw;
+    z-index: 30;
+  }
+  .hero-paragraph {
+    position: absolute;
+    top: 38.8vw;
+    left: 77.6vw;
+    width: 15.6vw;
+    font-size: 0.83vw;
+    line-height: 1.35;
+    text-align: center;
+    z-index: 30;
+  }
+  .doodle {
+    position: absolute;
+    z-index: 30;
+    pointer-events: none;
+  }
+  .doodle-hero-left {
+    left: 17.2vw;
+    top: 29.2vw;
+    width: 12vw;
+  }
+  .doodle-hero-right {
+    left: 78.1vw;
+    top: 45.8vw;
+    width: 10.4vw;
+  }
+
+  /* ============================= ribbons ============================= */
+
+  .ribbon-band {
+    position: relative;
+    height: 17.2vw;
+    z-index: 10;
+    /* clip the oversized full-bleed ribbons so they never create
+       horizontal overflow (visual full-bleed look is preserved) */
+    overflow: clip;
+  }
+  .ribbon {
+    position: absolute;
+    left: -5%;
+    width: 110%;
+    height: 5.4vw;
+    background: var(--ink);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  /* two ribbons crossing at band centre — measured from reference:
+     descending +4.5°, ascending -3.5°, ascending one in front */
+  .ribbon-1 { top: 50%; transform: translateY(-50%) rotate(4.5deg); }
+  .ribbon-2 { top: 50%; transform: translateY(-50%) rotate(-3.5deg); z-index: 2; }
+  .ribbon-track {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    will-change: transform;
+  }
+  .ribbon-unit {
+    display: flex;
+    align-items: center;
+    gap: 2.6vw;
+    padding-right: 2.6vw;
+    flex: none;
+  }
+  .ribbon-text {
+    font-family: 'Bowlby One SC', Impact, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    color: #ffffff;
+    font-size: 3vw;
+    line-height: 1;
+  }
+  .ribbon-chip {
+    width: 2.4vw;
+    height: 2.4vw;
+    border-radius: 999px;
+    background: var(--yellow-pill);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex: none;
+  }
+  .ribbon-chip img {
+    width: 78%;
+    height: 78%;
+    object-fit: contain;
+  }
+
+  /* ============================= recipe ============================= */
+
+  .recipe-stage {
+    position: relative;
+    height: 142.97vw;
+    z-index: 1;
+  }
+  .recipe-headline {
+    position: absolute;
+    top: 4.6vw;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 9.7vw;
+    line-height: 1.02;
+    z-index: 2;
+  }
+  .recipe-layer {
+    position: absolute;
+    left: 50%;
+    z-index: 3;
+  }
+  .recipe-layer img {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 18px 24px rgba(29, 1, 0, 0.12));
+  }
+  /* smiley — measured reference @1920: ~280px wide, top ≈ page y 3750
+   * (section top 1355px → 124.7vw), centered on the panel axis */
+  .recipe-smiley {
+    position: absolute;
+    top: 124.7vw;
+    left: calc(50% - 7.3vw);
+    width: 14.6vw;
+    z-index: 2;
+  }
+  .doodle-recipe-left { left: 7.8vw; top: 10.7vw; width: 10.4vw; }
+  .doodle-recipe-right { left: 81.3vw; top: 10.7vw; width: 10.4vw; }
+
+  .recipe-stack {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .recipe-cards {
+    display: contents;
+  }
+
+  /* Ingredient card — design.md §7 (~395px body, measured @1920) */
+  .ing-card {
+    position: absolute;
+    width: 20.6vw;
+    z-index: 4;
+    will-change: transform;
+  }
+  .ing-card-title {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    font-size: 8.3vw;
+    line-height: 0.95;
+    margin-bottom: -3.2vw;
+  }
+  .ing-card-body {
+    background: #fff7ea;
+    border-radius: 1.25vw;
+    padding: 1.04vw;
+    box-shadow: 0 24px 60px rgba(29, 1, 0, 0.14);
+  }
+  .ing-card-imgwrap {
+    background: var(--yellow-card);
+    border-radius: 1vw;
+    height: 19vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .ing-card-imgwrap img {
+    width: 88%;
+    height: 88%;
+    object-fit: contain;
+  }
+  .ing-card-caption {
+    font-size: 0.83vw;
+    line-height: 1.35;
+    text-align: center;
+    padding: 1.04vw 0.5vw 0.4vw;
+  }
+
+  /* ============================= food rules ============================= */
+
+  .food-rules {
+    position: relative;
+    height: 80.57vw;
+    padding: 16.1vw 4.5vw 0;
+  }
+  .fr-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 11.25vw;
+    font-size: 8vw;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: visible;
+  }
+  .fr-word {
+    flex: none;
+  }
+  .fr-capsule {
+    position: relative;
+    flex: none;
+    height: 8.2vw;
+    border-radius: 999px;
+    background: var(--yellow-pill);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* never clip the mini-burger — it pops above AND below the capsule */
+    overflow: visible;
+  }
+  .fr-capsule img {
+    height: 190%;
+    width: auto;
+    display: block;
+  }
+
+  /* ============================= footer ============================= */
+
+  .footer-stage {
+    position: relative;
+    height: 73.85vw;
+  }
+  .footer-headline {
+    position: absolute;
+    top: 11.8vw;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 10vw;
+    z-index: 2;
+    white-space: nowrap;
+  }
+  .footer-arch {
+    position: absolute;
+    top: 16vw;
+    bottom: 0;
+    left: calc(50% - 23.15vw);
+    width: 46.3vw;
+    background: var(--yellow-arch);
+    border-radius: 23.15vw 23.15vw 0 0;
+    z-index: 1;
+  }
+  .footer-burger {
+    position: absolute;
+    top: 13.1vw;
+    left: calc(50% - 23vw);
+    width: 46vw;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .footer-stage .nav-row {
+    top: auto;
+    bottom: 2.4vw;
+  }
+
+  /* order-now CTA — centered at the bottom of the footer stage, above the
+     mirrored nav. Ink pill / cream label: the inverse of the nav pills so it
+     reads as the page's primary action against the yellow arch. */
+  .order-now-wrap {
+    position: absolute;
+    bottom: 8.2vw;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 40;
+  }
+  /* Pulsing halo behind the CTA. Decorative and non-interactive: the button
+     itself must never be the thing that animates forever, or the click target
+     shifts under the pointer. */
+  .order-now-halo {
+    position: absolute;
+    width: 22vw;
+    height: 6vw;
+    border-radius: 999px;
+    background: var(--yellow-pill);
+    opacity: 0.28;
+    filter: blur(1.4vw);
+    pointer-events: none;
+  }
+  .order-now {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 1.4vw;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 999px;
+    padding: 1.1vw 1.1vw 1.1vw 2.6vw;
+    cursor: pointer;
+    overflow: hidden;
+    text-decoration: none;
+    box-shadow: 0 18px 40px rgba(29, 1, 0, 0.32);
+    will-change: transform;
+  }
+  .order-now-label {
+    color: var(--cream);
+    font-size: 2.4vw;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .order-now-badge {
+    width: 3.4vw;
+    height: 3.4vw;
+    border-radius: 999px;
+    background: var(--yellow-pill);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .order-now-badge svg {
+    width: 1.5vw;
+    height: 1.5vw;
+  }
+  /* diagonal yellow sheen swept across on hover */
+  .order-now-sheen {
+    position: absolute;
+    top: -50%;
+    left: 0;
+    width: 45%;
+    height: 200%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      rgba(254, 197, 27, 0.55),
+      transparent
+    );
+    transform: translateX(-140%);
+    pointer-events: none;
+  }
+
+  /* live count chip on the Order pill */
+  .pill-count {
+    min-width: 1.35vw;
+    height: 1.35vw;
+    padding: 0 0.3vw;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--yellow-pill);
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.83vw;
+    line-height: 1.35vw;
+    text-align: center;
+    flex: none;
+  }
+
+  /* ============================= sub-pages (menu / order) ============================= */
+
+  /* Shared page shell for /menu and /order. These are REAL pages in the normal
+     document flow — the page scrolls with the document (and Lenis), so there is
+     no inner scroll container and no nested scrollbar. */
+  .page-stage {
+    position: relative;
+    /* clear the absolute top nav, and leave room before the footer */
+    padding: 11vw 4.17vw 5vw;
+    /* fill the viewport on short pages so the footer never rides up */
+    min-height: 62vw;
+  }
+  /* Yellow arch echoing the hero/footer pillar, behind the content. It is
+     anchored to the TOP of the page (a capsule behind the headline + first
+     block) rather than stretched to the page bottom — stretching it left a
+     giant blob under short content. */
+  .page-arch {
+    position: absolute;
+    top: 7.5vw;
+    left: calc(50% - 30vw);
+    width: 60vw;
+    height: 46vw;
+    background: var(--yellow-arch);
+    border-radius: 30vw;
+    z-index: 0;
+  }
+  /* Stack page content above the arch. Excludes .order-toast, which is
+     position:fixed — a blanket `position: relative` here would override it and
+     drop the toast back into the flow. */
+  .page-stage > *:not(.page-arch):not(.order-toast) {
+    position: relative;
+    z-index: 2;
+  }
+  /* The ribbon band is full-bleed by design, but .page-stage has side padding —
+     break it back out to the viewport edges so the ribbons still run edge to
+     edge instead of being inset and clipped. */
+  .page-stage > .ribbon-band {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    margin-top: 3vw;
+  }
+  /* Sub-pages show the band on its own (no yellow pillar behind it), so spread
+     the two ribbons apart instead of letting them tangle at the centre. */
+  .page-stage > .ribbon-band .ribbon-1 {
+    top: 32%;
+  }
+  .page-stage > .ribbon-band .ribbon-2 {
+    top: 68%;
+  }
+
+  .page-head {
+    position: relative;
+    text-align: center;
+    margin-bottom: 4vw;
+  }
+  .page-title {
+    font-size: 9vw;
+    line-height: 0.94;
+    white-space: nowrap;
+    /* chars animate up from below — clip their start position */
+    overflow: hidden;
+    padding-bottom: 0.4vw;
+  }
+  .page-sub {
+    margin: 1vw auto 0;
+    max-width: 34vw;
+    font-size: 1vw;
+    line-height: 1.5;
+    color: var(--ink);
+    opacity: 0.85;
+  }
+  /* Doodle arrows flank the headline and point INTO it, tucked near the top
+     corners of the arch rather than stranded at the page edges. */
+  .page-doodle {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    width: 10.4vw;
+  }
+  .page-doodle-left {
+    left: 12vw;
+    top: 1vw;
+  }
+  .page-doodle-right {
+    right: 12vw;
+    top: 1vw;
+  }
+
+  /* -------------------------------- menu grid -------------------------------- */
+
+  .menu-group {
+    position: relative;
+    margin-bottom: 2vw;
+  }
+  .menu-group-head {
+    display: flex;
+    align-items: center;
+    gap: 1.6vw;
+    margin-bottom: 2.2vw;
+  }
+  .menu-group-rule {
+    flex: 1;
+    height: 0.26vw;
+    border-radius: 999px;
+    background: var(--ink);
+    opacity: 0.22;
+  }
+  .menu-group-title {
+    font-size: 3.2vw;
+    line-height: 1;
+    flex: none;
+  }
+  /* three burgers → three generous showcase columns */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.4vw;
+    max-width: 78vw;
+    margin: 0 auto;
+  }
+  /* card mirrors .ing-card: cream body, yellow image tile, soft shadow, tilt */
+  .menu-card {
+    position: relative;
+    background: #fff7ea;
+    border-radius: 1.25vw;
+    padding: 1.04vw;
+    box-shadow: 0 24px 60px rgba(29, 1, 0, 0.14);
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+    transition: box-shadow 0.3s ease;
+  }
+  .menu-card:hover {
+    box-shadow: 0 34px 70px rgba(29, 1, 0, 0.24);
+  }
+  .menu-card-tag {
+    position: absolute;
+    top: -0.7vw;
+    right: 0.9vw;
+    z-index: 3;
+    background: var(--green);
+    color: #fff;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.62vw;
+    letter-spacing: 0.08em;
+    padding: 0.35vw 0.7vw;
+    border-radius: 999px;
+    box-shadow: 0 6px 14px rgba(29, 1, 0, 0.2);
+  }
+  /* big ghost number behind each card's title, like a menu board */
+  .menu-card-num {
+    position: absolute;
+    top: 0.4vw;
+    left: 1vw;
+    z-index: 3;
+    font-size: 2.6vw;
+    line-height: 1;
+    color: var(--ink);
+    opacity: 0.14;
+    pointer-events: none;
+  }
+  .menu-card-imgwrap {
+    background: var(--yellow-card);
+    border-radius: 1vw;
+    height: 15vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .menu-card-imgwrap img {
+    width: 86%;
+    height: 86%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 14px rgba(29, 1, 0, 0.18));
+  }
+  .menu-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1vw 0.3vw 0.2vw;
+  }
+  .menu-card-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.6vw;
+  }
+  .menu-card-name {
+    font-size: 1.5vw;
+    line-height: 1.05;
+  }
+  .menu-card-price {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.1vw;
+    flex: none;
+  }
+  .menu-card-blurb {
+    margin-top: 0.6vw;
+    font-size: 0.78vw;
+    line-height: 1.45;
+    opacity: 0.8;
+    flex: 1;
+  }
+  .menu-card-add {
+    margin-top: 1vw;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7vw;
+    align-self: stretch;
+    justify-content: center;
+    background: var(--yellow-pill);
+    color: var(--ink);
+    border: none;
+    border-radius: 999px;
+    padding: 0.36vw 1vw 0.36vw 0.36vw;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 0.9vw;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1), background 0.25s ease;
+  }
+  .menu-card-add:hover {
+    transform: translateY(-2px);
+    background: var(--yellow);
+  }
+  .menu-card-add-badge {
+    width: 1.9vw;
+    height: 1.9vw;
+    border-radius: 0.6vw;
+    background: var(--ink);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .menu-card-add-badge svg {
+    width: 0.9vw;
+    height: 0.9vw;
+  }
+
+  /* page footer strip (above the ribbon band) */
+  .page-foot {
+    position: relative;
+    text-align: center;
+    padding-top: 2vw;
+    padding-bottom: 2vw;
+  }
+  /* CTA hugging the block above it (menu cards) instead of drifting far below */
+  .page-foot.is-tight {
+    padding-top: 0.4vw;
+    padding-bottom: 0;
+  }
+  .page-foot.is-tight .page-foot-note {
+    margin-bottom: 1vw;
+  }
+  .page-foot-smiley {
+    position: relative;
+    width: 8vw;
+    margin: 0 auto 1vw;
+  }
+  .page-foot-note {
+    font-size: 1vw;
+    opacity: 0.8;
+    margin-bottom: 1.6vw;
+  }
+  .page-foot-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.2vw;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 999px;
+    padding: 0.5vw 0.5vw 0.5vw 1.8vw;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 1.05vw;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(29, 1, 0, 0.26);
+    transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+  .page-foot-cta:hover {
+    transform: translateY(-3px) scale(1.03);
+  }
+  .page-foot-cta-badge {
+    width: 2.6vw;
+    height: 2.6vw;
+    border-radius: 999px;
+    background: var(--yellow-pill);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .page-foot-cta-badge svg {
+    width: 1.1vw;
+    height: 1.1vw;
+  }
+
+  /* -------------------------------- card (cart) -------------------------------- */
+
+  .cart-body {
+    display: grid;
+    grid-template-columns: 1fr 24vw;
+    gap: 2.4vw;
+    align-items: start;
+  }
+  .cart-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4vw;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .cart-row {
+    display: flex;
+    align-items: center;
+    gap: 1.4vw;
+    background: #fff7ea;
+    border-radius: 1.25vw;
+    padding: 1vw;
+    box-shadow: 0 18px 44px rgba(29, 1, 0, 0.12);
+    overflow: hidden;
+    will-change: transform;
+  }
+  .cart-row-imgwrap {
+    width: 8vw;
+    height: 8vw;
+    flex: none;
+    background: var(--yellow-card);
+    border-radius: 1vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .cart-row-imgwrap img {
+    width: 84%;
+    height: 84%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 12px rgba(29, 1, 0, 0.18));
+  }
+  .cart-row-main {
+    flex: 1;
+    min-width: 0;
+  }
+  .cart-row-name {
+    font-size: 1.7vw;
+    line-height: 1.05;
+  }
+  .cart-row-blurb {
+    margin-top: 0.4vw;
+    font-size: 0.8vw;
+    line-height: 1.45;
+    opacity: 0.75;
+  }
+  .cart-qty {
+    margin-top: 0.9vw;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5vw;
+    background: var(--yellow-pill);
+    border-radius: 999px;
+    padding: 0.3vw;
+  }
+  .cart-qty-btn {
+    width: 1.9vw;
+    height: 1.9vw;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex: none;
+    transition: transform 0.2s cubic-bezier(0.34, 1.5, 0.64, 1);
+  }
+  .cart-qty-btn:hover {
+    transform: scale(1.12);
+  }
+  .cart-qty-btn svg {
+    width: 0.9vw;
+    height: 0.9vw;
+  }
+  .cart-qty-num {
+    min-width: 1.6vw;
+    text-align: center;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1vw;
+    color: var(--ink);
+    display: inline-block;
+  }
+  .cart-row-end {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.8vw;
+    flex: none;
+  }
+  .cart-row-price {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.3vw;
+    white-space: nowrap;
+  }
+  .cart-row-del {
+    width: 2.2vw;
+    height: 2.2vw;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    border: 0.13vw solid rgba(29, 1, 0, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.22s ease, color 0.22s ease, transform 0.22s ease;
+  }
+  .cart-row-del svg {
+    width: 1.1vw;
+    height: 1.1vw;
+  }
+  .cart-row-del:hover {
+    background: var(--ink);
+    color: var(--cream);
+    transform: rotate(-8deg) scale(1.08);
+  }
+
+  /* sticky yellow total panel — offset so it never hides under the top nav */
+  .cart-total {
+    position: sticky;
+    top: 7vw;
+    background: var(--yellow-card);
+    border-radius: 1.25vw;
+    padding: 1.6vw;
+    box-shadow: 0 24px 60px rgba(29, 1, 0, 0.2);
+    will-change: transform;
+  }
+  .cart-total-title {
+    font-size: 2.6vw;
+    line-height: 1;
+    margin-bottom: 1.2vw;
+  }
+  .cart-total-rows {
+    margin: 0 0 1vw;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6vw;
+  }
+  .cart-total-rows > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1vw;
+    font-size: 0.9vw;
+  }
+  .cart-total-rows dt {
+    opacity: 0.75;
+  }
+  .cart-total-rows dd {
+    margin: 0;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 600;
+  }
+  .cart-total-grand {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1vw;
+    padding-top: 1vw;
+    border-top: 0.13vw dashed rgba(29, 1, 0, 0.3);
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1vw;
+  }
+  .cart-total-grand-num {
+    font-family: 'Bowlby One SC', Impact, sans-serif;
+    font-weight: 400;
+    font-size: 2.1vw;
+    line-height: 1;
+  }
+  .cart-checkout {
+    margin-top: 1.3vw;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 999px;
+    padding: 0.45vw 0.45vw 0.45vw 1.4vw;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 1.05vw;
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.25s ease;
+  }
+  .cart-checkout:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.02);
+  }
+  .cart-checkout:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .cart-checkout-badge {
+    width: 2.4vw;
+    height: 2.4vw;
+    border-radius: 999px;
+    background: var(--yellow-pill);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .cart-checkout-badge svg {
+    width: 1vw;
+    height: 1vw;
+  }
+  .cart-clear {
+    margin-top: 0.8vw;
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--ink);
+    opacity: 0.7;
+    font-size: 0.85vw;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .cart-clear:hover {
+    opacity: 1;
+  }
+  .cart-total-note {
+    margin-top: 1vw;
+    font-size: 0.75vw;
+    line-height: 1.4;
+    opacity: 0.7;
+    text-align: center;
+  }
+
+  /* Order-placed toast — FIXED to the top-right corner so it floats above the
+     page and never shifts the layout. Sits below the transition curtain. */
+  .order-toast {
+    position: fixed;
+    top: 7.5vw;
+    right: 2vw;
+    z-index: 150;
+    display: flex;
+    align-items: center;
+    gap: 0.9vw;
+    background: var(--green);
+    color: #fff;
+    border-radius: 1vw;
+    padding: 0.9vw 1.3vw;
+    max-width: 24vw;
+    box-shadow: 0 18px 44px rgba(29, 1, 0, 0.3);
+    pointer-events: none;
+  }
+  .order-toast-badge {
+    width: 2.2vw;
+    height: 2.2vw;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .order-toast-badge svg {
+    width: 1.2vw;
+    height: 1.2vw;
+  }
+  .order-toast-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15vw;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    line-height: 1.3;
+  }
+  .order-toast-text strong {
+    font-size: 0.95vw;
+    font-weight: 600;
+  }
+  .order-toast-text span {
+    font-size: 0.8vw;
+    opacity: 0.85;
+  }
+
+  /* -------------------------------- placed orders -------------------------------- */
+
+  .orders-section {
+    margin-top: 4.4vw;
+  }
+  .orders-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2vw;
+    justify-content: center;
+  }
+  /* a lone receipt would sit orphaned in the left column — centre it instead */
+  .orders-list:has(> :only-child) {
+    grid-template-columns: min(46vw, 100%);
+  }
+  /* receipt-style card: cream body, dashed ink rules, ink footer */
+  .order-card {
+    background: #fff7ea;
+    border-radius: 1.25vw;
+    padding: 1.4vw;
+    box-shadow: 0 20px 50px rgba(29, 1, 0, 0.14);
+    will-change: transform;
+  }
+  .order-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1vw;
+    padding-bottom: 1vw;
+    border-bottom: 0.13vw dashed rgba(29, 1, 0, 0.28);
+  }
+  .order-card-ref {
+    font-size: 1.6vw;
+    line-height: 1;
+    display: inline-block;
+  }
+  .order-card-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5vw;
+    background: var(--yellow-card);
+    border-radius: 999px;
+    padding: 0.36vw 0.9vw;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 0.78vw;
+    white-space: nowrap;
+    flex: none;
+  }
+  .order-card-dot {
+    width: 0.5vw;
+    height: 0.5vw;
+    border-radius: 999px;
+    background: var(--green);
+    flex: none;
+    animation: order-pulse 1.6s ease-in-out infinite;
+  }
+  .order-card-lines {
+    list-style: none;
+    margin: 0;
+    padding: 1vw 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8vw;
+  }
+  .order-card-lines li {
+    display: flex;
+    align-items: center;
+    gap: 0.8vw;
+    font-size: 0.9vw;
+  }
+  .order-card-thumb {
+    width: 2.6vw;
+    height: 2.6vw;
+    border-radius: 0.6vw;
+    background: var(--yellow-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex: none;
+  }
+  .order-card-thumb img {
+    width: 84%;
+    height: 84%;
+    object-fit: contain;
+  }
+  .order-card-qty {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 600;
+    flex: none;
+  }
+  .order-card-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .order-card-line-price {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 600;
+    flex: none;
+  }
+  .order-card-foot {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1vw;
+    padding-top: 1vw;
+    border-top: 0.13vw dashed rgba(29, 1, 0, 0.28);
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-size: 0.9vw;
+  }
+  .order-card-total {
+    font-size: 1.9vw;
+    line-height: 1;
+  }
+
+  .cart-empty {
+    background: #fff7ea;
+    border-radius: 1.25vw;
+    padding: 3vw 2vw;
+    text-align: center;
+    box-shadow: 0 18px 44px rgba(29, 1, 0, 0.12);
+  }
+  .cart-empty img {
+    width: 12vw;
+    height: auto;
+    margin: 0 auto 1vw;
+    opacity: 0.5;
+    filter: grayscale(0.3);
+  }
+  .cart-empty p {
+    font-size: 2.6vw;
+    line-height: 1;
+    opacity: 0.35;
+    margin-bottom: 1.4vw;
+  }
+  .cart-empty-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9vw;
+    background: var(--yellow-pill);
+    color: var(--ink);
+    border: none;
+    border-radius: 999px;
+    padding: 0.39vw 1.4vw 0.39vw 0.39vw;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 1vw;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(29, 1, 0, 0.14);
+    transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+  .cart-empty-cta:hover {
+    transform: translateY(-3px) scale(1.03);
+  }
+  .cart-empty-cta-badge {
+    width: 2.4vw;
+    height: 2.4vw;
+    border-radius: 0.7vw;
+    background: var(--ink);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .cart-empty-cta-badge svg {
+    width: 1vw;
+    height: 1vw;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* live "on the grill" status dot */
+@keyframes order-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(1.35); }
+}
+
+/* ============================= responsive ============================= */
+
+/* The whole layout is vw-scaled, so the composition scales down
+   proportionally — identical to the reference's small-screen look
+   (side selectors, side cards, same sections). Media queries only add
+   legibility / touch-target floors; they never rearrange the layout. */
+
+/* Overlays are the one place the layout DOES rearrange: their content is real
+   flowing text/controls rather than a measured composition, so the grids
+   collapse and type gets px floors to stay legible and tappable. */
+@media (max-width: 1024px) {
+  /* Touch-target + legibility floors for TABLETS too. The vw-derived sizes are
+     still too small at 769–1024px (28px pills, 9px totals text), and these are
+     touch devices, so the same minimums apply as on phones. */
+  .pill-btn { min-height: 44px; font-size: 14px; gap: 10px; padding: 6px 16px; }
+  .pill-btn.menu { padding-left: 6px; }
+  .pill-btn.order { padding-right: 6px; }
+  .pill-badge { width: 32px; height: 32px; border-radius: 9px; }
+  .pill-badge svg { width: 15px; height: 15px; }
+  .logo-squircle { width: 44px; height: 44px; border-radius: 12px; }
+  .pill-count { min-width: 20px; height: 20px; font-size: 11px; line-height: 20px; }
+  .selector-circle { width: max(5.73vw, 44px); height: max(5.73vw, 44px); }
+  .hero-paragraph { font-size: max(0.83vw, 12px); line-height: 1.45; }
+  .ing-card-caption { font-size: max(0.83vw, 12px); line-height: 1.45; }
+  .cart-total-rows > div { font-size: max(0.9vw, 13px); line-height: 1.5; }
+  .cart-total-grand { font-size: max(1vw, 14px); }
+  .cart-total-note { font-size: max(0.75vw, 12px); }
+  .cart-clear { font-size: max(0.85vw, 12px); }
+  .cart-checkout { font-size: max(1.05vw, 15px); padding: 6px 6px 6px 20px; gap: 12px; min-height: 48px; }
+  .cart-checkout-badge { width: max(9vw, 36px); height: max(9vw, 36px); }
+  .cart-empty-cta { font-size: max(1vw, 14px); padding: 6px 18px 6px 6px; gap: 10px; min-height: 44px; }
+  .cart-empty-cta-badge { width: max(2.4vw, 32px); height: max(2.4vw, 32px); border-radius: 9px; }
+  .page-foot-cta { font-size: max(1.05vw, 15px); padding: 6px 6px 6px 20px; gap: 12px; min-height: 46px; }
+  .page-foot-cta-badge { width: max(2.6vw, 34px); height: max(2.6vw, 34px); }
+  .page-sub { font-size: max(1vw, 13px); }
+  .page-foot-note { font-size: max(1vw, 13px); }
+  .menu-card-blurb { font-size: max(0.78vw, 12px); }
+  .menu-card-add { font-size: max(0.9vw, 14px); padding: 6px 16px 6px 6px; gap: 10px; min-height: 44px; }
+  .menu-card-add-badge { width: max(3.2vw, 32px); height: max(3.2vw, 32px); border-radius: 9px; }
+  .menu-card-tag { font-size: max(0.62vw, 11px); padding: 4px 9px; }
+  .cart-row-blurb { font-size: max(0.8vw, 12px); }
+  .cart-qty-btn { width: max(1.9vw, 40px); height: max(1.9vw, 40px); }
+  .cart-qty-num { font-size: max(1vw, 15px); }
+  .cart-row-del { width: max(2.2vw, 44px); height: max(2.2vw, 44px); }
+  .order-card-status { font-size: max(0.78vw, 12px); padding: 5px 11px; }
+  .order-card-lines li { font-size: max(0.9vw, 13px); }
+  .order-card-foot { font-size: max(0.9vw, 13px); }
+  .order-toast-text strong { font-size: max(0.95vw, 14px); }
+  .order-toast-text span { font-size: max(0.8vw, 12px); }
+  /* icons scale with their badges so they don't shrink to specks */
+  .menu-card-add-badge svg,
+  .cart-empty-cta-badge svg,
+  .cart-checkout-badge svg,
+  .page-foot-cta-badge svg { width: 15px; height: 15px; }
+  .cart-qty-btn svg { width: 16px; height: 16px; }
+  .cart-row-del svg { width: 18px; height: 18px; }
+
+  .menu-grid { grid-template-columns: repeat(2, 1fr); gap: 2.6vw; max-width: none; }
+  .menu-card-imgwrap { height: 24vw; }
+  .menu-card-num { font-size: 4vw; }
+  .orders-list { grid-template-columns: 1fr; }
+  .order-card-ref { font-size: 3vw; }
+  .order-card-status { font-size: 1.4vw; }
+  .order-card-lines li { font-size: 1.6vw; }
+  .order-card-thumb { width: 4.6vw; height: 4.6vw; }
+  .order-card-foot { font-size: 1.6vw; }
+  .order-card-total { font-size: 3.4vw; }
+  .order-toast { max-width: 42vw; }
+  .order-toast-text strong { font-size: 1.6vw; }
+  .order-toast-text span { font-size: 1.4vw; }
+  .order-toast-badge { width: 3.6vw; height: 3.6vw; }
+  .order-toast-badge svg { width: 2vw; height: 2vw; }
+  .menu-card-name { font-size: 2.6vw; }
+  .menu-card-price { font-size: 2vw; }
+  .menu-card-blurb { font-size: 1.5vw; }
+  .menu-card-add { font-size: 1.6vw; padding: 0.6vw 1.6vw 0.6vw 0.6vw; }
+  .menu-card-add-badge { width: 3.2vw; height: 3.2vw; border-radius: 1vw; }
+  .menu-card-add-badge svg { width: 1.5vw; height: 1.5vw; }
+  .menu-card-tag { font-size: 1.1vw; }
+  .cart-body { grid-template-columns: 1fr; }
+  .cart-total { position: relative; }
+}
+
+@media (max-width: 768px) {
+  /* keep the nav clear of the top edge on phones */
+  .nav-row { top: max(2.4vw, 12px); }
+
+  /* Nav pills / logo get real touch targets (≥44px tall) and legible labels.
+     At 320–420px the vw-derived sizes collapsed to ~21px tall with 9px text,
+     which is both hard to hit and hard to read. */
+  .pill-btn {
+    min-height: 44px;
+    font-size: 13px;
+    gap: 8px;
+    padding: 6px 14px;
+  }
+  .pill-btn.menu { padding-left: 6px; }
+  .pill-btn.order { padding-right: 6px; }
+  .pill-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+  }
+  .pill-badge svg { width: 15px; height: 15px; }
+  .logo-squircle {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+  .pill-count {
+    min-width: 20px;
+    height: 20px;
+    font-size: 11px;
+    line-height: 20px;
+  }
+
+  /* order-now CTA keeps a tappable floor */
+  .order-now-wrap { bottom: 9.5vw; }
+  .order-now { gap: max(1.4vw, 8px); padding: max(1.1vw, 8px) max(1.1vw, 8px) max(1.1vw, 8px) max(2.6vw, 16px); }
+  .order-now-label { font-size: max(2.4vw, 18px); }
+  .order-now-badge { width: max(3.4vw, 28px); height: max(3.4vw, 28px); }
+  .order-now-badge svg { width: max(1.5vw, 13px); height: max(1.5vw, 13px); }
+  .order-now-halo { width: 58vw; height: 16vw; filter: blur(5vw); }
+
+  /* sub-page chrome + type floors */
+  .page-stage { padding: 22vw 5vw 10vw; min-height: 0; }
+  .page-title { font-size: 13vw; white-space: normal; }
+  .page-sub { max-width: 80vw; font-size: max(1vw, 12px); }
+  .page-arch { top: 18vw; left: calc(50% - 42vw); width: 84vw; border-radius: 42vw; bottom: 26vw; }
+  .page-doodle-left, .page-doodle-right { width: 14vw; top: 14vw; }
+  /* stop the sticky total from covering the rows on a narrow screen */
+  .cart-total { position: relative; top: auto; }
+
+  /* menu: single column on phones */
+  .menu-grid { grid-template-columns: 1fr; gap: 5vw; max-width: none; }
+  .menu-group-title { font-size: 6vw; }
+  .menu-card { border-radius: 3vw; padding: 3vw; }
+  .menu-card-num { font-size: 8vw; top: 1vw; left: 3vw; }
+  .menu-card-imgwrap { height: 44vw; border-radius: 2.4vw; }
+  .menu-card-name { font-size: 5.4vw; }
+  .menu-card-price { font-size: 4.4vw; }
+  .menu-card-blurb { font-size: max(0.78vw, 12px); }
+  .menu-card-tag { font-size: max(0.62vw, 11px); top: -1.8vw; padding: 4px 9px; }
+  .menu-card-add { font-size: max(0.9vw, 14px); padding: 6px 16px 6px 6px; gap: 10px; margin-top: 3vw; min-height: 44px; }
+  .menu-card-add-badge { width: max(8vw, 32px); height: max(8vw, 32px); border-radius: 9px; }
+  .menu-card-add-badge svg { width: 4vw; height: 4vw; }
+
+  /* card rows stack their media above the text */
+  .cart-row { flex-wrap: wrap; border-radius: 3vw; padding: 3vw; gap: 3vw; }
+  .cart-row-imgwrap { width: 24vw; height: 24vw; border-radius: 2.4vw; }
+  .cart-row-main { flex-basis: 55%; }
+  .cart-row-name { font-size: 5.4vw; }
+  .cart-row-blurb { font-size: max(0.8vw, 12px); }
+  .cart-qty { padding: 1vw; gap: 2vw; margin-top: 2.4vw; }
+  .cart-qty-btn { width: max(8vw, 40px); height: max(8vw, 40px); }
+  .cart-qty-btn svg { width: 4vw; height: 4vw; }
+  .cart-qty-num { min-width: 6vw; font-size: max(1vw, 15px); }
+  .cart-row-end { flex-direction: row; width: 100%; justify-content: space-between; align-items: center; }
+  .cart-row-price { font-size: 5vw; }
+  .cart-row-del { width: max(9vw, 44px); height: max(9vw, 44px); }
+  .cart-row-del svg { width: 4.4vw; height: 4.4vw; }
+
+  .cart-total { border-radius: 3vw; padding: 5vw; }
+  .cart-total-title { font-size: 8vw; }
+  .cart-total-rows > div { font-size: max(0.9vw, 13px); line-height: 1.5; }
+  .cart-total-grand { font-size: max(1vw, 14px); }
+  .cart-total-grand-num { font-size: 7vw; }
+  .cart-checkout { font-size: max(1.05vw, 15px); padding: 6px 6px 6px 20px; gap: 12px; min-height: 48px; }
+  .cart-checkout-badge { width: max(9vw, 36px); height: max(9vw, 36px); }
+  .cart-checkout-badge svg { width: 4vw; height: 4vw; }
+  .cart-clear { font-size: max(0.85vw, 12px); }
+  .cart-total-note { font-size: max(0.75vw, 12px); }
+  .cart-empty { border-radius: 3vw; padding: 10vw 5vw; }
+  .cart-empty img { width: 34vw; }
+  .cart-empty p { font-size: 9vw; }
+  .cart-empty-cta { font-size: max(1vw, 14px); padding: 6px 18px 6px 6px; gap: 10px; min-height: 44px; }
+  .cart-empty-cta-badge { width: max(9vw, 32px); height: max(9vw, 32px); border-radius: 9px; }
+  .cart-empty-cta-badge svg { width: 4vw; height: 4vw; }
+
+  /* placed orders on phones */
+  .orders-section { margin-top: 12vw; }
+  .orders-list { grid-template-columns: 1fr; gap: 6vw; }
+  .order-card { border-radius: 4vw; padding: 5vw; }
+  /* ref + status need room to sit side by side without touching, and to wrap
+     cleanly when the reference is long */
+  .order-card-head { flex-wrap: wrap; gap: 3vw; padding-bottom: 4vw; }
+  .order-card-ref { font-size: 6vw; }
+  .order-card-status { font-size: max(0.78vw, 12px); padding: 5px 11px; }
+  .order-card-dot { width: 1.8vw; height: 1.8vw; }
+  .order-card-lines { padding: 4vw 0; gap: 3.4vw; }
+  .order-card-lines li { font-size: max(0.9vw, 13px); gap: 3vw; }
+  .order-card-thumb { width: 9vw; height: 9vw; border-radius: 2vw; }
+  .order-card-foot { padding-top: 4vw; font-size: max(0.9vw, 13px); }
+  .order-card-total { font-size: 7vw; }
+  /* toast stays pinned top-right but needs room on a narrow screen */
+  .order-toast {
+    top: max(16vw, 60px);
+    right: 4vw;
+    left: 4vw;
+    max-width: none;
+    border-radius: 3vw;
+    padding: 3.4vw 4vw;
+    gap: 3vw;
+  }
+  .order-toast-badge { width: 9vw; height: 9vw; }
+  .order-toast-badge svg { width: 4.4vw; height: 4.4vw; }
+  .order-toast-text strong { font-size: max(0.95vw, 14px); }
+  .order-toast-text span { font-size: max(0.8vw, 12px); }
+
+  .page-foot-smiley { width: 22vw; }
+  .page-foot-note { font-size: max(1vw, 12px); }
+  .page-foot-cta { font-size: max(1.05vw, 15px); padding: 6px 6px 6px 20px; gap: 12px; min-height: 46px; }
+  .page-foot-cta-badge { width: max(9vw, 34px); height: max(9vw, 34px); }
+  .page-foot-cta-badge svg { width: 4vw; height: 4vw; }
+  /* ---------------------------------------------------------------- home page
+     The home page is a pixel-measured 1920px composition: every piece is
+     absolutely positioned in vw. Scaled to a phone those slots become far too
+     small for real text, and px legibility floors then make content overflow
+     its slot and collide with neighbours.
+     So on phones the composition is RE-FLOWED: side-pinned text moves below the
+     art, the side cards stack in one column, and each section's height grows to
+     fit. It is the one place the layout genuinely has to rearrange. */
+
+  /* -- hero -- */
+  .hero-stage { height: 142vw; }
+  /* clear of the nav pills (the eco stamp shares that top-right corner) */
+  .hero-headline { top: 22vw; font-size: 13vw; white-space: normal; line-height: 0.95; }
+  /* burger sits under the headline, centred and smaller */
+  .hero-burger { top: 42vw; left: calc(50% - 33vw); width: 66vw; }
+  /* selectors become a horizontal row under the burger, not a side column */
+  .hero-selectors {
+    left: 0;
+    right: 0;
+    top: 112vw;
+    flex-direction: row;
+    justify-content: center;
+    gap: 4vw;
+  }
+  /* eco stamp tucks to the top-right, clear of the headline */
+  /* sits below the headline block rather than crowding its top-right */
+  .hero-badge { top: 52vw; left: auto; right: 3vw; width: 24vw; }
+  /* paragraph moves OUT of the side slot to full width below the selectors —
+     at 15.6vw wide with 12px text it overlapped the burger and clipped */
+  .hero-paragraph {
+    position: absolute;
+    top: 130vw;
+    left: 8vw;
+    right: 8vw;
+    width: auto;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  /* the flanking doodles have nowhere to live at this width */
+  .doodle-hero-left, .doodle-hero-right { display: none; }
+
+  /* -- recipe --
+     The stage keeps a fixed height for the ABSOLUTE art (headline, layer stack,
+     smiley), and the cards flow BELOW it via padding-bottom + static cards, so
+     six stacked cards can never overflow into the next section. */
+  .recipe-stage { height: auto; padding-bottom: 8vw; }
+  /* clear of the ribbon band crossing above it */
+  .recipe-headline { top: 12vw; font-size: 13vw; line-height: 1; }
+  /* The layer stack is driven by --ls (scale) / --lts (top scale) / --lt0 (top
+     offset), consumed per-layer in Home.tsx. Scale the stack up ~1.55× and push
+     it below the headline via those knobs rather than fighting each layer's
+     absolute top. */
+  .recipe-stack {
+    --ls: 1.55;
+    --lts: 1.55;
+    --lt0: 30vw;
+  }
+  .doodle-recipe-left, .doodle-recipe-right { display: none; }
+  .recipe-smiley { top: 258vw; left: calc(50% - 11vw); width: 22vw; }
+
+  /* Ingredient cards: the ±72vw side slots put them on top of the layer stack.
+     Stack them in ONE centred column below the stack instead. Positions are set
+     per-card in the component, so neutralise those with !important. */
+  .ing-card {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 76vw;
+    margin: 0 auto 8vw;
+  }
+  /* In normal flow (NOT absolute): the section then grows with the cards instead
+     of letting them spill over FOOD RULES and the footer. The spacer reserves
+     room for the absolutely-positioned layer stack + smiley above them. */
+  .recipe-cards {
+    display: block;
+    position: relative;
+    z-index: 6;
+    padding-top: 268vw;
+  }
+  .ing-card-title { font-size: 15vw; margin-bottom: -5vw; }
+  .ing-card-imgwrap { height: 52vw; }
+  .ing-card-body { border-radius: 3vw; padding: 3vw; }
+
+  /* -- food rules -- */
+  /* the single-line-per-row layout ran off both edges; let lines wrap */
+  .food-rules { height: auto; padding: 18vw 5vw 12vw; }
+  .fr-line {
+    height: auto;
+    /* was 9.5vw (~36px @375) and read as small, timid body copy — this is the
+       section's hero statement, so it should fill the line like the other
+       display headlines do */
+    font-size: 13vw;
+    line-height: 1.02;
+    flex-wrap: wrap;
+    justify-content: center;
+    white-space: normal;
+    gap: 2.5vw;
+    margin-bottom: 1vw;
+  }
+  /* Capsules scale with the larger type. The desktop art lets the mini-burger
+     pop 190% out of the capsule, which at phone sizes just reads as a cropped
+     burger spilling over the pill — so keep it closer to the capsule height. */
+  .fr-capsule { height: 16vw; padding: 0 5vw; }
+  /* The three mini-burgers have very different aspect ratios (one is tall and
+     narrow), so a single height % crops it. Cap the WIDTH too and let the image
+     letterbox inside the capsule instead of overflowing it. */
+  .fr-capsule img {
+    height: 128%;
+    max-width: 22vw;
+    object-fit: contain;
+  }
+
+  /* -- footer -- */
+  .footer-stage { height: 136vw; }
+  /* clear of the ribbon band that ends the FOOD RULES section above */
+  .footer-headline { top: 26vw; font-size: 14vw; white-space: normal; }
+  .footer-arch { top: 48vw; left: calc(50% - 36vw); width: 72vw; border-radius: 36vw 36vw 0 0; }
+  .footer-burger { top: 46vw; left: calc(50% - 35vw); width: 70vw; }
+  /* keep the CTA clear of the mirrored bottom nav (they collided) */
+  .order-now-wrap { bottom: 26vw; }
+  .footer-stage .nav-row { bottom: 6vw; }
+
+  /* hero burger selectors are tap targets too */
+  .selector-circle { width: max(5.73vw, 44px); height: max(5.73vw, 44px); }
+  .ing-card-caption { font-size: max(0.83vw, 12px); line-height: 1.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill-btn,
+  .selector-circle,
+  .page-foot-cta,
+  .menu-card,
+  .menu-card-add,
+  .cart-qty-btn,
+  .cart-row-del,
+  .cart-checkout,
+  .cart-empty-cta,
+  .order-now {
+    transition: none;
+  }
+  /* purely decorative motion */
+  .order-now-sheen { display: none; }
+  .order-now-halo { display: none; }
+  .order-card-dot { animation: none; }
+}

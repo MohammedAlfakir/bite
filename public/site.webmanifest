@@ -1,0 +1,14 @@
+{
+  "name": "BITE — Gourmet Burgers",
+  "short_name": "BITE",
+  "description": "Flame-grilled burgers, stacked by hand.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF0DC",
+  "theme_color": "#1D0100",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}
