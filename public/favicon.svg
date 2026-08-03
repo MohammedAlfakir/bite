@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BITE burger">
-  <!-- ink squircle, matching the nav logo (design tokens: --ink #1D0100) -->
+  <!-- ink squircle, matching the nav logo (token: ink #1D0100) -->
   <rect width="64" height="64" rx="15" fill="#1D0100"/>
   <!-- sesame top bun -->
   <path d="M12 27c0-9.4 8.7-16 20-16s20 6.6 20 16H12Z" fill="#FCC419"/>
